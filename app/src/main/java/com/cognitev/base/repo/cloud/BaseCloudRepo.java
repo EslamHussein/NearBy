@@ -6,9 +6,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -35,20 +34,6 @@ public class BaseCloudRepo {
         return service;
     }
 
-    protected <T> T execute(Call<T> call) throws Throwable {
-        Response<T> response = call.execute();
-
-        if (!response.isSuccessful()) {
-
-//            Logger.e("Cloud exp : ", JsonUtil.objectToString(response));
-
-//            throw new LaCaseException();  // TODO: HTTP failure exception
-
-        }
-//        Logger.e("Cloud response : ", response.body());
-
-        return response.body();
-    }
 
     private Retrofit retrofit() {
 
@@ -58,6 +43,7 @@ public class BaseCloudRepo {
         return new Retrofit.Builder()
                 .baseUrl(CloudConfig.BASE_URL).client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 

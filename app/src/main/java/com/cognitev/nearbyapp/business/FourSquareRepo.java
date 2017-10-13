@@ -1,6 +1,9 @@
 package com.cognitev.nearbyapp.business;
 
-import com.cognitev.base.dto.BaseResponse;
+import com.cognitev.nearbyapp.model.dto.photo.PhotoResponse;
+import com.cognitev.nearbyapp.model.dto.venue.VenueResponse;
+
+import io.reactivex.Observable;
 
 
 /**
@@ -10,9 +13,8 @@ import com.cognitev.base.dto.BaseResponse;
 public interface FourSquareRepo {
 
 
-    BaseResponse getVenues(String lat, String lng) throws Exception;
+    Observable<VenueResponse> getVenues(String lat, String lng) throws Throwable;
 
-
-    BaseResponse getPhoto(String venueId) throws Exception;
+    Observable<PhotoResponse> getPhoto(String venueId) throws Throwable;
 
 }

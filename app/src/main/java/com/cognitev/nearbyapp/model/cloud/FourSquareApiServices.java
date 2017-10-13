@@ -1,9 +1,10 @@
 package com.cognitev.nearbyapp.model.cloud;
 
 
-import com.cognitev.base.dto.BaseResponse;
+import com.cognitev.nearbyapp.model.dto.photo.PhotoResponse;
+import com.cognitev.nearbyapp.model.dto.venue.VenueResponse;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -15,12 +16,12 @@ import retrofit2.http.Query;
 public interface FourSquareApiServices {
 
     @GET("explore")
-    Call<BaseResponse> getVenues(@Query("ll") String latLng, @Query("client_id") String clientId,
-                                 @Query("client_secret") String clientSecret, @Query("v") String version);
+    Observable<VenueResponse> getVenues(@Query("ll") String latLng, @Query("client_id") String clientId,
+                                        @Query("client_secret") String clientSecret, @Query("v") String version);
 
 
     @GET("{venue_id}/photos")
-    Call<BaseResponse> getPhoto(@Path("venue_id") String venueId, @Query("client_id") String clientId,
-                                @Query("client_secret") String clientSecret, @Query("v") String version);
+    Observable<PhotoResponse> getPhoto(@Path("venue_id") String venueId, @Query("client_id") String clientId,
+                                       @Query("client_secret") String clientSecret, @Query("v") String version);
 
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NearByApp</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="rationale_location">Access Location</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="returned_from_app_settings_to_activity">returned_from_app_settings_to_activity</string>
 </resources>

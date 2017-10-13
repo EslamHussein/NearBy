@@ -1,10 +1,13 @@
 package com.cognitev.nearbyapp.model.cloud;
 
-import com.cognitev.base.dto.BaseResponse;
 import com.cognitev.base.repo.cloud.BaseCloudRepo;
 import com.cognitev.base.repo.cloud.CloudConfig;
 import com.cognitev.nearbyapp.business.FourSquareRepo;
+import com.cognitev.nearbyapp.model.dto.photo.PhotoResponse;
+import com.cognitev.nearbyapp.model.dto.venue.VenueResponse;
 import com.cognitev.utils.DateUtils;
+
+import io.reactivex.Observable;
 
 /**
  * Created by Eslam Hussein on 10/12/17.
@@ -14,27 +17,21 @@ public class FourSquareCloudRepoImpl extends BaseCloudRepo implements FourSquare
 
 
     @Override
-    public BaseResponse getVenues(String lat, String lng) throws Exception {
-        try {
-            String version = DateUtils.getCurrentDate();
-            StringBuilder latLng = new StringBuilder().append(lat).append(",").append(lng);
-            return execute(create(FourSquareApiServices.class).getVenues(latLng.toString(),
-                    CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version));
+    public Observable<VenueResponse> getVenues(String lat, String lng) throws Throwable {
+        String version = DateUtils.getCurrentDate();
+        StringBuilder latLng = new StringBuilder().append(lat).append(",").append(lng);
 
-        } catch (Throwable throwable) {
-            throw new Exception(throwable);
-        }
+        return create(FourSquareApiServices.class).getVenues(latLng.toString(),
+                CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version);
+
+
     }
 
     @Override
-    public BaseResponse getPhoto(String venueId) throws Exception {
-        try {
-            String version = DateUtils.getCurrentDate();
-            return execute(create(FourSquareApiServices.class).getPhoto(venueId,
-                    CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version));
+    public Observable<PhotoResponse> getPhoto(String venueId) throws Throwable {
+        String version = DateUtils.getCurrentDate();
+        return create(FourSquareApiServices.class).getPhoto(venueId,
+                CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version);
 
-        } catch (Throwable throwable) {
-            throw new Exception(throwable);
-        }
     }
 }

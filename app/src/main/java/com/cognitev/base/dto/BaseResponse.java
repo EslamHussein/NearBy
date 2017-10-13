@@ -1,8 +1,5 @@
 package com.cognitev.base.dto;
 
-/**
- * Created by Eslam Hussein on 10/11/17.
- */
 
 public class BaseResponse {
 
