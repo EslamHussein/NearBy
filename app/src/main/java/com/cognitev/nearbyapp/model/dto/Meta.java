@@ -1,4 +1,4 @@
-package com.cognitev.base.dto;
+package com.cognitev.nearbyapp.model.dto;
 
 /**
  * Created by Eslam Hussein on 10/11/17.

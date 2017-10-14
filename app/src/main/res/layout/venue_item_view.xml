@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/image_view_venue"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_margin="8dp" />
 
 
@@ -20,16 +20,18 @@
 
         <TextView
             android:id="@+id/text_view_venue_name"
+            style="@style/CustomTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="2dp"
+            android:text="asdasd asd asd a" />
 
         <TextView
             android:id="@+id/text_view_venue_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="2dp"
+            android:text="asdasd asd asd a" />
     </LinearLayout>
 
 </RelativeLayout>

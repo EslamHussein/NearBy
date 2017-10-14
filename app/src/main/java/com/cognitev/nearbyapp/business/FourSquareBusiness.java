@@ -1,17 +1,13 @@
 package com.cognitev.nearbyapp.business;
 
-import android.util.Log;
-
 import com.cognitev.nearbyapp.model.cloud.FourSquareCloudRepoImpl;
+import com.cognitev.nearbyapp.model.dto.photo.PhotoItem;
 import com.cognitev.nearbyapp.model.dto.photo.PhotoResponse;
 import com.cognitev.nearbyapp.model.dto.venue.Group;
 import com.cognitev.nearbyapp.model.dto.venue.Item;
 import com.cognitev.nearbyapp.model.dto.venue.Venue;
 import com.cognitev.nearbyapp.model.dto.venue.VenueResponse;
 import com.cognitev.nearbyapp.ui.dto.VenueItemView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -24,97 +20,49 @@ public class FourSquareBusiness {
 
     private FourSquareRepo fourSquareCloudRepo = new FourSquareCloudRepoImpl();
 
-    public Observable<List<VenueItemView>> getVenues(final String lat, final String lng) throws Throwable {
+    public Observable<VenueItemView> getVenues(final String lat, final String lng) {
 
-        return fourSquareCloudRepo.getVenues(lat, lng).map(new Function<VenueResponse, List<Venue>>() {
+
+        return fourSquareCloudRepo.getVenues(lat, lng).flatMap(new Function<VenueResponse, Observable<Group>>() {
             @Override
-            public List<Venue> apply(@NonNull VenueResponse venueResponse) throws Exception {
-                List<Venue> venues = new ArrayList<Venue>();
-                for (Group group : venueResponse.getResponse().getGroups()) {
-                    for (Item item : group.getItems()) {
-                        venues.add(item.getVenue());
-                    }
-                }
-                return venues;
+            public Observable<Group> apply(@NonNull VenueResponse venueResponse) throws Exception {
+
+                return Observable.fromIterable(venueResponse.getResponse().getGroups());
             }
-        }).flatMap(new Function<List<Venue>, Observable<List<VenueItemView>>>() {
+        }).flatMap(new Function<Group, Observable<Item>>() {
             @Override
-            public Observable<List<VenueItemView>> apply(@NonNull List<Venue> venues) throws Exception {
-
-
-                List<Observable<PhotoResponse>> venueObservables = new ArrayList<>();
-                for (Venue venue : venues) {
-                    try {
-                        venueObservables.add(getPhoto(venue));
-
-                    } catch (Throwable e) {
-
-                    }
-                }
-
-                Observable<List<Venue>> venueObservableList = Observable.fromArray(venues);
-                Observable<List<PhotoResponse>> listObservable = getPhotoObservables(venueObservables);
-
-                Observable<List<VenueItemView>> venueItemsViewObservables
-                        = getVenuesItemViewObservable(venueObservableList, listObservable);
-
-                return venueItemsViewObservables;
-
+            public Observable<Item> apply(@NonNull Group group) throws Exception {
+                return Observable.fromIterable(group.getItems());
             }
-        });
+        }).flatMap(new Function<Item, Observable<VenueItemView>>() {
 
-
-    }
-
-
-    private Observable<List<PhotoResponse>> getPhotoObservables(List<Observable<PhotoResponse>> venueObservables) {
-
-        return Observable.zip(venueObservables, new Function<Object[], List<PhotoResponse>>() {
             @Override
-            public List<PhotoResponse> apply(@NonNull Object[] objects) throws Exception {
-
-                List<PhotoResponse> itemDetails = new ArrayList<>();
-                for (Object arg : objects) {
-                    Log.d(TAG, "apply() returned: " + arg.getClass());
-
-                    PhotoResponse photoResponse = (PhotoResponse) arg;
-                    itemDetails.add(photoResponse);
-                }
-                return itemDetails;
-
-            }
-        });
-
-    }
+            public Observable<VenueItemView> apply(@NonNull Item item) throws Exception {
+                Venue venue = item.getVenue();
+                VenueItemView venueItemView = new VenueItemView(venue.getId(), venue.getName(), venue.getLocation().getAddress(), "");
 
 
-    private Observable<List<VenueItemView>> getVenuesItemViewObservable(Observable<List<Venue>> venueObservableList, Observable<List<PhotoResponse>> listObservable) {
-
-
-        return Observable.zip(venueObservableList, listObservable,
-                new BiFunction<List<Venue>, List<PhotoResponse>, List<VenueItemView>>() {
+                Observable<PhotoItem> photoItemObservable = getPhoto(venue);
+                return Observable.zip(photoItemObservable, Observable.just(venueItemView), new BiFunction<PhotoItem, VenueItemView, VenueItemView>() {
                     @Override
-                    public List<VenueItemView> apply(@NonNull List<Venue> venues, @NonNull List<PhotoResponse> photoResponses) throws Exception {
-
-                        ArrayList<VenueItemView> venueItemViews = new ArrayList<VenueItemView>();
-                        for (int i = 0; i < venues.size(); i++) {
-
-                            Venue venue = venues.get(i);
-                            PhotoResponse photo = photoResponses.get(i);
-                            VenueItemView venueItemView = new VenueItemView(venue.getId(),
-                                    venue.getName(), venue.getLocation().getAddress(), "");
-
-                            venueItemViews.add(venueItemView);
-                        }
-                        return venueItemViews;
+                    public VenueItemView apply(@NonNull PhotoItem photoItem, @NonNull VenueItemView venueItemView) throws Exception {
+                        String tempPhoto = photoItem.getPrefix() + "100x100" + photoItem.getSuffix();
+                        venueItemView.setPhoto(tempPhoto);
+                        return venueItemView;
                     }
-                }
-        );
+                });
+            }
+        });
+
     }
 
-    private Observable<PhotoResponse> getPhoto(final Venue venue) throws Throwable {
+    private Observable<PhotoItem> getPhoto(final Venue venue) throws Exception {
 
-        return fourSquareCloudRepo.getPhoto(venue.getId());
-
+        return fourSquareCloudRepo.getPhoto(venue.getId()).flatMap(new Function<PhotoResponse, Observable<PhotoItem>>() {
+            @Override
+            public Observable<PhotoItem> apply(@NonNull PhotoResponse photoResponse) throws Exception {
+                return Observable.fromIterable(photoResponse.getResponse().getPhotos().getItems()).take(1);
+            }
+        });
     }
 }

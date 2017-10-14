@@ -1,6 +1,6 @@
 package com.cognitev.nearbyapp.model.dto.venue;
 
-import com.cognitev.base.dto.Meta;
+import com.cognitev.nearbyapp.model.dto.Meta;
 
 /**
  * Created by Eslam Hussein on 10/12/17.

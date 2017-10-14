@@ -17,7 +17,7 @@ public class FourSquareCloudRepoImpl extends BaseCloudRepo implements FourSquare
 
 
     @Override
-    public Observable<VenueResponse> getVenues(String lat, String lng) throws Throwable {
+    public Observable<VenueResponse> getVenues(String lat, String lng) {
         String version = DateUtils.getCurrentDate();
         StringBuilder latLng = new StringBuilder().append(lat).append(",").append(lng);
 
@@ -28,7 +28,7 @@ public class FourSquareCloudRepoImpl extends BaseCloudRepo implements FourSquare
     }
 
     @Override
-    public Observable<PhotoResponse> getPhoto(String venueId) throws Throwable {
+    public Observable<PhotoResponse> getPhoto(String venueId) throws Exception {
         String version = DateUtils.getCurrentDate();
         return create(FourSquareApiServices.class).getPhoto(venueId,
                 CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version);

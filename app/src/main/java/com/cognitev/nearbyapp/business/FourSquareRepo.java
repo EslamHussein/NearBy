@@ -13,8 +13,8 @@ import io.reactivex.Observable;
 public interface FourSquareRepo {
 
 
-    Observable<VenueResponse> getVenues(String lat, String lng) throws Throwable;
+    Observable<VenueResponse> getVenues(String lat, String lng);
 
-    Observable<PhotoResponse> getPhoto(String venueId) throws Throwable;
+    Observable<PhotoResponse> getPhoto(String venueId) throws Exception;
 
 }
