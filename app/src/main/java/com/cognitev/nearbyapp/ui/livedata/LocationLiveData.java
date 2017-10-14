@@ -51,7 +51,7 @@ public class LocationLiveData extends LiveData<Location> implements LocationList
         } else {
             if (MyPreferences.getInstance().getIsRealTime()) {
                 float diff = location.distanceTo(mCurrentLocation);
-                if (diff > 50) {
+                if (diff > 500) {
                     mCurrentLocation = location;
                     setValue(mCurrentLocation);
                 }

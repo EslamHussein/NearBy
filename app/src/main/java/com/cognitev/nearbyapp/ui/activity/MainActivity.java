@@ -96,11 +96,9 @@ public class MainActivity extends LifecycleActivity {
         venuesViewModel.getProgressLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    showProgressBar();
-                } else {
-                    hideProgressBar();
-                }
+                loadingView.setVisibility(View.VISIBLE);
+                venuesRecyclerView.setVisibility(View.GONE);
+                errorView.setVisibility(View.GONE);
             }
         });
 
@@ -119,9 +117,6 @@ public class MainActivity extends LifecycleActivity {
                     case Defs.IN_SCREEN:
                         showErrorView(uiError);
                         break;
-                    case Defs.SNACK_BAR:
-                        showErrorSnackBar(uiError);
-                        break;
                 }
 
             }
@@ -135,23 +130,15 @@ public class MainActivity extends LifecycleActivity {
         observeViewModel();
     }
 
-    private void showProgressBar() {
-        loadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        loadingView.setVisibility(View.GONE);
-    }
-
     private void showVenues(List<VenueItemView> venueItemViews) {
         venuesAdapter = new VenuesAdapter(venueItemViews, MainActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         venuesRecyclerView.setLayoutManager(mLayoutManager);
         venuesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         venuesRecyclerView.setAdapter(venuesAdapter);
-
         venuesRecyclerView.setVisibility(View.VISIBLE);
         errorView.setVisibility(View.GONE);
+        loadingView.setVisibility(View.GONE);
 
     }
 
@@ -159,14 +146,12 @@ public class MainActivity extends LifecycleActivity {
     private void showErrorView(UiError uiError) {
         venuesRecyclerView.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
+        errorImageView.setImageResource(uiError.getImage());
         errorTextView.setText(uiError.getMessage());
+        loadingView.setVisibility(View.GONE);
+
     }
 
-    private void showErrorSnackBar(UiError uiError) {
-        venuesRecyclerView.setVisibility(View.VISIBLE);
-        errorView.setVisibility(View.GONE);
-        showSnackBar(uiError.getMessage());
-    }
 
     private void showSnackBar(final String text) {
         View container = findViewById(R.id.main_activity_container);

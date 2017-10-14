@@ -65,10 +65,6 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-        if (venuesLiveData.getValue() == null || venuesLiveData.getValue().size() < 0)
-            progressLiveData.setValue(true);
-        else
-            progressLiveData.setValue(false);
 
     }
 
@@ -82,14 +78,11 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
     public void onError(@NonNull Throwable e) {
 
         UiError uiError = new UiError();
-        if (venuesLiveData.getValue() == null || venuesLiveData.getValue().size() < 0) {
-            uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
-        } else {
-            uiError.setErrorsDisplayTypes(Defs.SNACK_BAR);
-        }
+        uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+        uiError.setImage(R.drawable.ic_cloud_off_black_48dp);
+
         uiError.setMessage(TextUtils.getString(R.string.something_went_wrong));
         errorObservable.setValue(uiError);
-        progressLiveData.setValue(false);
 
     }
 
@@ -98,16 +91,17 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
         if (venueItemViews == null || venueItemViews.size() < 0) {
             UiError uiError = new UiError();
             uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+            uiError.setImage(R.drawable.ic_info_outline_black_48dp);
             uiError.setMessage(TextUtils.getString(R.string.no_data_found));
             errorObservable.setValue(uiError);
         } else {
             venuesLiveData.setValue(venueItemViews);
         }
-        progressLiveData.setValue(false);
     }
 
     @Override
     public void onChanged(@Nullable Location location) {
+        progressLiveData.setValue(true);
         venueItemViews = new ArrayList<>();
         squareBusiness.getVenues(String.valueOf(location.getLatitude()),
                 String.valueOf(location.getLongitude())).subscribeOn(Schedulers.io()).

@@ -59,7 +59,7 @@ public class FourSquareBusiness {
         return fourSquareCloudRepo.getPhoto(venue.getId()).flatMap(new Function<PhotoResponse, Observable<PhotoItem>>() {
             @Override
             public Observable<PhotoItem> apply(@NonNull PhotoResponse photoResponse) throws Exception {
-                return Observable.fromIterable(photoResponse.getResponse().getPhotos().getItems()).take(1);
+                return Observable.fromIterable(photoResponse.getResponse().getPhotos().getItems().subList(0, 4)).take(1);
             }
         });
     }
