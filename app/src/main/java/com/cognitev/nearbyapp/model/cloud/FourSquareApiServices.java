@@ -19,7 +19,6 @@ public interface FourSquareApiServices {
     Observable<VenueResponse> getVenues(@Query("ll") String latLng, @Query("client_id") String clientId,
                                         @Query("client_secret") String clientSecret, @Query("v") String version);
 
-
     @GET("{venue_id}/photos")
     Observable<PhotoResponse> getPhoto(@Path("venue_id") String venueId, @Query("client_id") String clientId,
                                        @Query("client_secret") String clientSecret, @Query("v") String version);

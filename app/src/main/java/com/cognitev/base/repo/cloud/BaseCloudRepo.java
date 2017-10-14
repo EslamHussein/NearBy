@@ -14,13 +14,10 @@ public class BaseCloudRepo {
 
     protected <T> T create(Class<T> clazz) {
         T service = retrofit().create(clazz);
-
         return service;
     }
 
-
     private Retrofit retrofit() {
-
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .build();
         return new Retrofit.Builder()

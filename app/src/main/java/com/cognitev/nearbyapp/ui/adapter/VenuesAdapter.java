@@ -42,10 +42,7 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenuesView
         VenueItemView venue = mData.get(position);
         holder.venueNameTextView.setText(venue.getName());
         holder.venueAddressTextView.setText(venue.getAddress());
-
         Glide.with(context).load(venue.getPhoto()).into(holder.venueImageView);
-
-
     }
 
     @Override
@@ -63,7 +60,6 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenuesView
             venueNameTextView = itemView.findViewById(R.id.text_view_venue_name);
             venueImageView = itemView.findViewById(R.id.image_view_venue);
             venueAddressTextView = itemView.findViewById(R.id.text_view_venue_address);
-
         }
     }
 }

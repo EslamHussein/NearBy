@@ -10,8 +10,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 public class Defs {
-
-
     public static final int SNACK_BAR = 1;
     public static final int IN_SCREEN = 2;
 

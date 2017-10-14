@@ -53,10 +53,7 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
 
     public void loadLocation(LifecycleOwner lifecycleOwner) {
         locationLiveData.observe(lifecycleOwner, this);
-
-
     }
-
 
     public LiveData<List<VenueItemView>> getVenuesLiveData() {
         return venuesLiveData;
@@ -112,7 +109,6 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
     @Override
     public void onChanged(@Nullable Location location) {
         venueItemViews = new ArrayList<>();
-
         squareBusiness.getVenues(String.valueOf(location.getLatitude()),
                 String.valueOf(location.getLongitude())).subscribeOn(Schedulers.io()).
                 observeOn(AndroidSchedulers.mainThread()).

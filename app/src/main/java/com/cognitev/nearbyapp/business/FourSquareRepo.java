@@ -15,6 +15,6 @@ public interface FourSquareRepo {
 
     Observable<VenueResponse> getVenues(String lat, String lng);
 
-    Observable<PhotoResponse> getPhoto(String venueId) throws Exception;
+    Observable<PhotoResponse> getPhoto(String venueId);
 
 }

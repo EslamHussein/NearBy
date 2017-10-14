@@ -5,13 +5,10 @@ package com.cognitev.nearbyapp.ui.dto;
  */
 
 public class VenueItemView {
-
-
     private String id;
     private String name;
     private String address;
     private String photo;
-
 
     public VenueItemView(String id, String name, String address, String photo) {
         this.id = id;

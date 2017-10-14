@@ -28,7 +28,7 @@ public class FourSquareCloudRepoImpl extends BaseCloudRepo implements FourSquare
     }
 
     @Override
-    public Observable<PhotoResponse> getPhoto(String venueId) throws Exception {
+    public Observable<PhotoResponse> getPhoto(String venueId) {
         String version = DateUtils.getCurrentDate();
         return create(FourSquareApiServices.class).getPhoto(venueId,
                 CloudConfig.CLIENT_ID, CloudConfig.CLIENT_SECRET, version);
