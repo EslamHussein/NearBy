@@ -85,7 +85,11 @@ public class VenuesViewModel extends AndroidViewModel implements SingleObserver<
     public void onSuccess(@NonNull List<VenueItemView> venueItemViews) {
         if (venueItemViews == null || venueItemViews.size() < 0) {
             UiError uiError = new UiError();
-            uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+            if (venuesLiveData.getValue() != null && venuesLiveData.getValue().size() > 0) {
+                uiError.setErrorsDisplayTypes(Defs.SNACK_BAR);
+            } else {
+                uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+            }
             uiError.setImage(R.drawable.ic_info_outline_black_48dp);
             uiError.setMessage(TextUtils.getString(R.string.no_data_found));
             errorObservable.setValue(uiError);
@@ -98,7 +102,12 @@ public class VenuesViewModel extends AndroidViewModel implements SingleObserver<
     public void onError(@NonNull Throwable e) {
 
         UiError uiError = new UiError();
-        uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+
+        if (venuesLiveData.getValue() != null && venuesLiveData.getValue().size() > 0) {
+            uiError.setErrorsDisplayTypes(Defs.SNACK_BAR);
+        } else {
+            uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+        }
         uiError.setImage(R.drawable.ic_cloud_off_black_48dp);
         uiError.setMessage(TextUtils.getString(R.string.something_went_wrong));
         errorObservable.setValue(uiError);

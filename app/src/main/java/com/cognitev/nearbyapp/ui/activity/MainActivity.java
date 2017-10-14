@@ -116,6 +116,8 @@ public class MainActivity extends LifecycleActivity {
                 switch (uiError.getErrorsDisplayTypes()) {
                     case Defs.IN_SCREEN:
                         showErrorView(uiError);
+                    case Defs.SNACK_BAR:
+                        showErrorViewSnackBar(uiError);
                         break;
                 }
 
@@ -152,6 +154,12 @@ public class MainActivity extends LifecycleActivity {
 
     }
 
+
+    private void showErrorViewSnackBar(UiError uiError) {
+        showSnackBar(uiError.getMessage());
+        loadingView.setVisibility(View.GONE);
+
+    }
 
     private void showSnackBar(final String text) {
         View container = findViewById(R.id.main_activity_container);
