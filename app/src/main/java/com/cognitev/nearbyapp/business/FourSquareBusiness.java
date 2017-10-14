@@ -9,7 +9,10 @@ import com.cognitev.nearbyapp.model.dto.venue.Venue;
 import com.cognitev.nearbyapp.model.dto.venue.VenueResponse;
 import com.cognitev.nearbyapp.ui.dto.VenueItemView;
 
+import java.util.List;
+
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
@@ -20,7 +23,7 @@ public class FourSquareBusiness {
 
     private FourSquareRepo fourSquareCloudRepo = new FourSquareCloudRepoImpl();
 
-    public Observable<VenueItemView> getVenues(final String lat, final String lng) {
+    public Single<List<VenueItemView>> getVenues(final String lat, final String lng) {
 
 
         return fourSquareCloudRepo.getVenues(lat, lng).flatMap(new Function<VenueResponse, Observable<Group>>() {
@@ -50,7 +53,7 @@ public class FourSquareBusiness {
                     }
                 });
             }
-        });
+        }).toList();
 
     }
 
@@ -59,7 +62,7 @@ public class FourSquareBusiness {
         return fourSquareCloudRepo.getPhoto(venue.getId()).flatMap(new Function<PhotoResponse, Observable<PhotoItem>>() {
             @Override
             public Observable<PhotoItem> apply(@NonNull PhotoResponse photoResponse) throws Exception {
-                return Observable.fromIterable(photoResponse.getResponse().getPhotos().getItems().subList(0, 4)).take(1);
+                return Observable.fromIterable(photoResponse.getResponse().getPhotos().getItems()).take(1);
             }
         });
     }

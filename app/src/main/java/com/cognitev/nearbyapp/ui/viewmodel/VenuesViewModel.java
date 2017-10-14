@@ -16,10 +16,9 @@ import com.cognitev.nearbyapp.ui.livedata.LocationLiveData;
 import com.cognitev.utils.Defs;
 import com.cognitev.utils.TextUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -29,13 +28,12 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Eslam Hussein on 10/12/17.
  */
 
-public class VenuesViewModel extends AndroidViewModel implements Observer<VenueItemView>, android.arch.lifecycle.Observer<Location> {
+public class VenuesViewModel extends AndroidViewModel implements SingleObserver<List<VenueItemView>>, android.arch.lifecycle.Observer<Location> {
     public static final String TAG = VenuesViewModel.class.getName();
 
 
     private FourSquareBusiness squareBusiness;
     private MutableLiveData<List<VenueItemView>> venuesLiveData;
-    private List<VenueItemView> venueItemViews;
     private MutableLiveData<UiError> errorObservable;
     private MutableLiveData<Boolean> progressLiveData;
 
@@ -63,31 +61,28 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
         return errorObservable;
     }
 
+
+    @Override
+    public void onChanged(@Nullable Location location) {
+        progressLiveData.setValue(true);
+        squareBusiness.getVenues(String.valueOf(location.getLatitude()),
+                String.valueOf(location.getLongitude())).subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribe(this);
+
+    }
+
+    public MutableLiveData<Boolean> getProgressLiveData() {
+        return progressLiveData;
+    }
+
     @Override
     public void onSubscribe(@NonNull Disposable d) {
 
     }
 
     @Override
-    public void onNext(@NonNull VenueItemView venueItemView) {
-        venueItemViews.add(venueItemView);
-
-    }
-
-    @Override
-    public void onError(@NonNull Throwable e) {
-
-        UiError uiError = new UiError();
-        uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
-        uiError.setImage(R.drawable.ic_cloud_off_black_48dp);
-
-        uiError.setMessage(TextUtils.getString(R.string.something_went_wrong));
-        errorObservable.setValue(uiError);
-
-    }
-
-    @Override
-    public void onComplete() {
+    public void onSuccess(@NonNull List<VenueItemView> venueItemViews) {
         if (venueItemViews == null || venueItemViews.size() < 0) {
             UiError uiError = new UiError();
             uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
@@ -100,17 +95,13 @@ public class VenuesViewModel extends AndroidViewModel implements Observer<VenueI
     }
 
     @Override
-    public void onChanged(@Nullable Location location) {
-        progressLiveData.setValue(true);
-        venueItemViews = new ArrayList<>();
-        squareBusiness.getVenues(String.valueOf(location.getLatitude()),
-                String.valueOf(location.getLongitude())).subscribeOn(Schedulers.io()).
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribe(VenuesViewModel.this);
+    public void onError(@NonNull Throwable e) {
 
-    }
+        UiError uiError = new UiError();
+        uiError.setErrorsDisplayTypes(Defs.IN_SCREEN);
+        uiError.setImage(R.drawable.ic_cloud_off_black_48dp);
+        uiError.setMessage(TextUtils.getString(R.string.something_went_wrong));
+        errorObservable.setValue(uiError);
 
-    public MutableLiveData<Boolean> getProgressLiveData() {
-        return progressLiveData;
     }
 }
