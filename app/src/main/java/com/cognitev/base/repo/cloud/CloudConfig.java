@@ -7,6 +7,6 @@ package com.cognitev.base.repo.cloud;
 public class CloudConfig {
 
     public static final String BASE_URL = "https://api.foursquare.com/v2/venues/";
-    public static final String CLIENT_ID = "QSYALZSU5ZLAOGU03CIEKEN3V3STT0PJ4AFQL5W4I1MCT3KA";
-    public static final String CLIENT_SECRET = "GBZVEW0BGQE3350FOKH2IDFOZ1YWG0ADNPYZPMTX45IFBDXT";
+    public static final String CLIENT_ID = "FA1IX5BOH2H2YZHIRRAX5O15344T4CNAK1S4TUFEYY3UWAAH";
+    public static final String CLIENT_SECRET = "NHKFOMQVVDCYXWDARB245SMPSHRZ3EGNCE1KKDCMPRHQL1TU";
 }
