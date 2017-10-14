@@ -40,8 +40,6 @@ public class FourSquareBusiness {
             public Observable<VenueItemView> apply(@NonNull Item item) throws Exception {
                 Venue venue = item.getVenue();
                 VenueItemView venueItemView = new VenueItemView(venue.getId(), venue.getName(), venue.getLocation().getAddress(), "");
-
-
                 Observable<PhotoItem> photoItemObservable = getPhoto(venue);
                 return Observable.zip(photoItemObservable, Observable.just(venueItemView), new BiFunction<PhotoItem, VenueItemView, VenueItemView>() {
                     @Override

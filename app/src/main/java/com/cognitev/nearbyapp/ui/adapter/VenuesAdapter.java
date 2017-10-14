@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cognitev.nearbyapp.R;
 import com.cognitev.nearbyapp.ui.dto.VenueItemView;
 
@@ -41,6 +42,9 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenuesView
         VenueItemView venue = mData.get(position);
         holder.venueNameTextView.setText(venue.getName());
         holder.venueAddressTextView.setText(venue.getAddress());
+
+        Glide.with(context).load(venue.getPhoto()).into(holder.venueImageView);
+
 
     }
 
